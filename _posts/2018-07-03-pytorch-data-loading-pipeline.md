@@ -1,4 +1,4 @@
-#Pytorch data loading pipeline
+# Pytorch data loading pipeline
 There are three classes we will use to customize our own dataset pipeline on usual.
 
 
