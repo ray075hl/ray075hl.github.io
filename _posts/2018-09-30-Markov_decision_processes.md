@@ -15,10 +15,10 @@ to depend on this state only.
 
 ### 1.2 Transition matrix
 
-|       |      sunny        |    rainy          |
-| ----- |      -----        |    -----          |
-| sunny |  <center>**0.8**  | <center>**0.2**   |
-| rainy |  <center>**0.1**  | <center>**0.9**   |
+|       |      sunny        |    rainy       |
+| ----- |      -----        |    -----       |
+| sunny |  <center>0.8      |  <center>0.2   |
+| rainy |  <center>0.1      |  <center>0.9   |
 
 In practice, we rarely have the luxury of knowing the exact transition   
 matrix. A much more real-world situation is when we have only observations   
@@ -45,19 +45,19 @@ or negtive, large or small-it's just a number. This number we call it
 "reward".   
 
 
-**Discount factor** $\gamma{}$ (gamma), a single number from 0 to 1(inclusive).
+**Discount factor** $$\gamma{}$$ (gamma), a single number from 0 to 1(inclusive).
 
 For every episode, we define **return** at the time t as this quantity:  
-$G_{t}=R_{t+1} + \gamma R_{t+2}+...=\sum_{k=0}^{\infty}r^{k}R_{t+k+1}$
+$$G_{t}=R_{t+1} + \gamma R_{t+2}+...=\sum_{k=0}^{\infty}r^{k}R_{t+k+1}$$
 
-If $\gamma{}$ equals to 1, then return $G_{t}$ just equals a sum of all subsequent rewards, consider more about futures. If $\gamma{}$ equals 0,   
-our return $G_{t}$ will be just immediate reward without any subsequent  
+If $$\gamma{}$$ equals to 1, then return $G_{t}$ just equals a sum of all subsequent rewards, consider more about futures. If $\gamma{}$ equals 0,   
+our return $$G_{t}$$ will be just immediate reward without any subsequent  
 state and correspond to absolute short-sightedness.  
 
-$G_{t}$ is not very useful in practive, as it was defined for every specific  
+$$G_{t}$$ is not very useful in practive, as it was defined for every specific  
 chain we observed from our Markov reward process, so it can vary widely even  
 for the same state. However, if we go to the extremes and calculate the   
 mathematical expectation of return for any state (by averaging large amount of  
 chains), we'll get a much more useful quantity, called a **value of state**:  
 
-$V(s)=E[G|S_{t}=s]$
+$$V(s)=E[G|S_{t}=s]$$
