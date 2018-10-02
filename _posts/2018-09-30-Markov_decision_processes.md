@@ -15,10 +15,10 @@ to depend on this state only.
 
 ### 1.2 Transition matrix
 
-|       |      sunny        |    rainy       |
-| ----- |      -----        |    -----       |
-| sunny |  <center>0.8      |  <center>0.2   |
-| rainy |  <center>0.1      |  <center>0.9   |
+|       | sunny       | rainy       |
+| ----- | ----------- | ----------- |
+| sunny | <center>0.8 | <center>0.2 |
+| rainy | <center>0.1 | <center>0.9 |
 
 In practice, we rarely have the luxury of knowing the exact transition   
 matrix. A much more real-world situation is when we have only observations   
@@ -36,7 +36,7 @@ be to the true underlying model.
 
 * A set of state (***S***) that a system can be in.
 * A transition matrix (***T***), with transition probabilities,    
-which defines the system dynamics.
+  which defines the system dynamics.
 
 ## 2. Markov reward process
 
@@ -50,7 +50,10 @@ or negtive, large or small-it's just a number. This number we call it
 For every episode, we define **return** at the time t as this quantity:  
 $$G_{t}=R_{t+1} + \gamma R_{t+2}+...=\sum_{k=0}^{\infty}r^{k}R_{t+k+1}$$
 
-If $$\gamma{}$$ equals to 1, then return $G_{t}$ just equals a sum of all subsequent rewards, consider more about futures. If $\gamma{}$ equals 0,   
+If $$\gamma{}$$ equals to 1, then return $$G_{t}$$ just equals a sum of all subsequent rewards, consider  
+
+more about futures. If $$\gamma{}$$ equals 0,   
+
 our return $$G_{t}$$ will be just immediate reward without any subsequent  
 state and correspond to absolute short-sightedness.  
 
@@ -61,3 +64,25 @@ mathematical expectation of return for any state (by averaging large amount of
 chains), we'll get a much more useful quantity, called a **value of state**:  
 
 $$V(s)=E[G|S_{t}=s]$$
+
+## 3. Markov decision process
+
+To turn MRP into an MDP, we need to add actions to our reward matrix in the same way we  
+
+did with the transition matrix: our reward matrix will depend not only state but also on action.  
+
+In other words, it means that the reward the agent obtains now depends not only no the state  
+
+it ends up in but also on the action that leads to this state.
+
+### 3.1 Policy
+
+The intuitive definition of policy is that it is some set of rules that controls the agent's behavior.   
+
+Policy is defined as the probability distribution over actions for every possible state:   
+
+$$\pi(a|s)=P[A_{t}=a|S_{t}=s]$$   
+
+This is defined as probability, not as a concrete action, to introduce randomness into an agent's   
+
+behavior.
