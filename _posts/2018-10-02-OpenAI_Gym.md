@@ -78,11 +78,34 @@ calculations, and selects the action to issue. The result of this action is a **
 
 ## 2. Hardware and software requirements
 
+**Software**:
 
+- Numpy
+- OpenCV Python bindings
+- Gym
+- PyTorch
+- Ptan           
+
+**Hardware**:
+
+* GPU
+
+  
 
 ## 3. OpenAI Gym API
 
+The main goal of Gym is to provide a rich collection of environments for RL experiments  
 
+for RL experiments using a unified interface. So, it's not surprising that the central class in the library is an   
+
+an environment, which is called Env. From high level, every environment provides you with these  
+
+pieces of information and functionality:
+
+* A set of actions that are allowed to be executed in an environment. Gym supports both  discrete and continuous actions, as well as their combination. 
+* The shape and bondaries of the observations that an environment provides the agent with.
+* A method called step to execute an action, which returns the current observation, reward, and indication that the episode is over.
+* A method called reset to return the environment to its initial state and to obtain the first observation.
 
 ## 4. Action space
 
