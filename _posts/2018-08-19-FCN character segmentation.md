@@ -1,7 +1,7 @@
 ---
 layout: post
 title: FCN character segmentation
-data: 2018-08-19 23:50:00
+date: 2018-08-19 23:50:00
 img: moon.jpg
 ---
 使用FCN来做字符分割，参考这篇文章的算法

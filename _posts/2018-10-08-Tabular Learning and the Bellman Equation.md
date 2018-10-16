@@ -45,7 +45,7 @@ $$Q(s,a)=r_{s,a}+\gamma \max_{a^* \in A}Q(s^*,a^*)$$
 
 $$s$$ is current state, $$s^{*}$$ is next state. 
 
-## The Value iteration iteration method
+## The Value iteration method
 
 The procedure (for values of states) includes the following steps:
 
@@ -55,7 +55,8 @@ The procedure (for values of states) includes the following steps:
 
     $$V_{s} \leftarrow \max_{a} \sum_{s^{*}}p_{a, s \to s^{*}}(r_{s,a}+\gamma V_{s^{*}}) $$  
 
-3. Repeat step 2 for some large number of steps or until changes become too small
+3. Repeat step 2 for some large number of steps or until changes become too small   
+
 
 In the case of action values (that is Q):
 
