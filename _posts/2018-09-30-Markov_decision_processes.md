@@ -38,7 +38,7 @@ be to the true underlying model.
 * A transition matrix (***T***), with transition probabilities,    
   which defines the system dynamics.
 
-## 2. Markov reward process
+## 2. Markov reward process(MRP)
 
 Add value to our transition from state to state. This value can be positive 
 or negtive, large or small-it's just a number. This number we call it  
