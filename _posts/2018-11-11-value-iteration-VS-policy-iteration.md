@@ -22,7 +22,7 @@ $$V^*(s) = \max\sum_{s'}T(s,a,s')[R(s,a,s')+\gamma V^*(s')]$$
 
   不停地迭代值函数直至收敛（例如变化小于$$\delta$$）；
 
-  ![value iteration](value_iter.jpg)
+  ![value iteration](../assets/img/value_iter.jpg)
 
 * 策略迭代的步骤是： **策略评估** 和 **策略改善** 交替进行， 直至策略不变（收敛） ，
 
@@ -34,7 +34,7 @@ $$V^*(s) = \max\sum_{s'}T(s,a,s')[R(s,a,s')+\gamma V^*(s')]$$
 
   $$\pi_{i+1}(s)=\arg\max_{a} \sum_{s'}T(s,a,s')[R(s,a,s')+\gamma V^{\pi_{i}}(s')]$$
 
-  ![policy iteration](policy_iter.jpg)
+  ![policy iteration](../assets/img/policy_iter.jpg)
 
   ​
 
