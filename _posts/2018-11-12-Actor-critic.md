@@ -66,26 +66,26 @@ the mean square error to improve $$V(s)$$ approximation)
 
 <span style="color:red">从训练的角度来看, 完整的流程如下:</span>
 
->1. **Initialize network parameters $$\theta$$ with random values**   
+>1 **Initialize network parameters $$\theta$$ with random values**   
 >
->2. **Play $$N$$ steps in the environment using the current policy $$\pi_{\theta}$$,**
+>2 **Play $$N$$ steps in the environment using the current policy $$\pi_{\theta}$$,**
 >
 >   **saving state $$s_{t}$$ , action $$a_{t}$$ ,  reward $$r_{t}$$**   
 >
->3. **$$R=0$$ or $$V_{\theta}(s_{t})=0$$  if the end of the episode is reached**
+>3 **$$R=0$$ or $$V_{\theta}(s_{t})=0$$  if the end of the episode is reached**
 >
->4. **For $$i=t-1...t_{start}$$ (note that steps are processed backwards):**
+>4 **For $$i=t-1...t_{start}$$ (note that steps are processed backwards):**
 >
->   * **Accumulate the PG $$\partial\theta_{\pi} \leftarrow \partial\theta_{\pi}+\nabla_{\theta}\log\pi_{\theta}(a_{i}|s_{i})(R-V_{\theta}(s_{i}))$$  **
->   * **Accumulate the value gradients $$\partial\theta_{v}\leftarrow \partial\theta_{v}+\frac{\partial(R-V_{\theta}(s_{i}))^2}{\partial\theta_{v}}$$**  
+>* **Accumulate the PG** $$\partial\theta_{\pi} \leftarrow \partial\theta_{\pi}+\nabla_{\theta}\log\pi_{\theta}(a_{i}|s_{i})(R-V_{\theta}(s_{i}))$$  
+>* **Accumulate the value gradients $$\partial\theta_{v}\leftarrow \partial\theta_{v}+\frac{\partial(R-V_{\theta}(s_{i}))^2}{\partial\theta_{v}}​$$**  
 >
->5. **Update network parameters using the accumulated gradients, moving**
+>5 **Update network parameters using the accumulated gradients, moving**  
 >
->   **direction of PG $$\partial\theta_{\pi}$$ (最大化)and in the opposite direction of the value gradient**  
+>   **direction of PG $$\partial\theta_{\pi}$$ (最大化)and in the opposite direction**  
 >
->   **$$\partial\theta_{v}$$(最小化)**
+>   **of the value gradient $$\partial\theta_{v}$$(最小化)**
 >
->6. **Repeat from step 2 until convergence is reached**
+>6 **Repeat from step 2 until convergence is reached**
 
 
 
@@ -99,7 +99,7 @@ the mean square error to improve $$V(s)$$ approximation)
 
   add entropy value:   
 
-  $$L_{entropy} = \beta \sum_{i}\pi_{\theta}(s_{i})\log\pi_{\theta}(s_{i})​$$.
+  $$L_{entropy} = \beta \sum_{i}\pi_{\theta}(s_{i})\log\pi_{\theta}(s_{i})$$.
 
 * To improve stability, it's worth using several environments, our training batch wil be  
 
