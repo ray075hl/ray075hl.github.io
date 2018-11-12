@@ -106,11 +106,11 @@ tag: [machine learning]
 
   solution: add a entropy loss to punish the absolutely decision
 
-  $$ H(\pi) =  -\sum \pi(a|s) \log\pi(a|S)$$  when policy is uniform(random), the $$H(\pi)$$ have 
+  $$ H(\pi) =  -\sum \pi(a|s) \log\pi(a|s)$$  when policy is uniform(random), the $$H(\pi)$$ have 
 
   maximum value.
 
-* <span style="color:blue">Correlation between samples</span>. To solve this problem, parallel environments are   
+* <span style="color:blue">Correlation between samples</span>. To solve this problem, **parallel environments** are   
 
   normally used. we use several and use their transitions as training data.
 
