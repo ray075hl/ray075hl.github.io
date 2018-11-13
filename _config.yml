@@ -27,5 +27,6 @@ analytics: # Google Analytics
 markdown: kramdown
 plugins:
   - jekyll-sitemap
-
+plugins:
+  - jemoji
 exclude: ["node_modules", "gulpfile.js", "package.json", "yarn.lock"]
