@@ -26,7 +26,7 @@ $$Q(s,a)=V(s)+A(s,a)$$
 
 观测的$$s$$的$$V(s)$$吧!  其中$$A(s,a)$$这一项被称作是Advantage function.
 
-<span style="color : red">$V(s)$的更新是遵从bellman update的</span>.(We'll carry out the Bellman step and then minimize
+<span style="color : red">$$V(s)$$的更新是遵从bellman update的</span>.(We'll carry out the Bellman step and then minimize
 
 the mean square error to improve $$V(s)$$ approximation)   
 
@@ -74,10 +74,11 @@ the mean square error to improve $$V(s)$$ approximation)
 >
 >3 **$$R=0$$ or $$V_{\theta}(s_{t})=0$$  if the end of the episode is reached**
 >
->4 **For $$i=t-1...t_{start}$$ (note that steps are processed backwards):**
+>4 For $$i=t-1...t_{start}$$ (note that steps are processed backwards):
 >
->* **Accumulate the PG** $$\partial\theta_{\pi} \leftarrow \partial\theta_{\pi}+\nabla_{\theta}\log\pi_{\theta}(a_{i}|s_{i})(R-V_{\theta}(s_{i}))$$  
->* **Accumulate the value gradients $$\partial\theta_{v}\leftarrow \partial\theta_{v}+\frac{\partial(R-V_{\theta}(s_{i}))^2}{\partial\theta_{v}}​$$**  
+>1. **Accumulate the PG** $$\partial \theta_{\pi} \leftarrow \partial\theta_{\pi}+\nabla{\theta}\log\pi_{\theta}(a_{i} \|s_{i})(R-V_{\theta}(s_{i})) $$       
+>
+>2. **Accumulate the value gradients** $$\partial\theta_{v}\leftarrow \partial\theta_{v}+\frac{\partial(R-V_{\theta}(s_{i}))^2}{\partial\theta_{v}}$$  
 >
 >5 **Update network parameters using the accumulated gradients, moving**  
 >
