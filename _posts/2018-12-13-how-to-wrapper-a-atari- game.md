@@ -1,7 +1,7 @@
 ---
 layout: post
 title: How to wrapper a atari game
-date: 2018-12-05 18:00:00
+date: 2018-12-13 20:00:00
 tag: [programming]
 img: aigame.png
 ---
