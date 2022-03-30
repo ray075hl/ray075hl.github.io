@@ -1,0 +1,183 @@
+I"�1<h2 id="1-the-anatomy-of-the-agent">1. The anatomy of the agent</h2>
+
+<ul>
+  <li><strong>Agent</strong></li>
+  <li><strong>Environment</strong></li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">random</span>
+
+<span class="k">class</span> <span class="nc">Environment</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">steps_left</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="k">def</span> <span class="nf">get_observation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">is_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">steps_left</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="s">"""
+        This method is the central piece in the
+        environment's functionality. It does two things
+        * handles the agent's action
+        * returns the reward for this action
+        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="nb">Exception</span><span class="p">(</span><span class="s">"Game is over"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">steps_left</span> <span class="o">-=</span> <span class="mi">1</span>
+        
+        <span class="k">return</span> <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">Agent</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">total_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">):</span>
+        <span class="s">"""
+        * Observe the environment
+        * Make a decision about the action to take based
+          on the observations
+        * Submit the action to the environment
+        * Get the reward for the current step
+        """</span>
+        <span class="n">current_obs</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="n">get_observation</span><span class="p">()</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="n">get_actions</span><span class="p">()</span>
+        <span class="n">reward</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="n">action</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">(</span><span class="n">actions</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">total_reward</span> <span class="o">+=</span> <span class="n">reward</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">()</span>
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">()</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">env</span><span class="p">.</span><span class="n">is_done</span><span class="p">():</span>
+        <span class="n">agent</span><span class="p">.</span><span class="n">step</span><span class="p">(</span><span class="n">env</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">"Total reward got: {:4}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">agent</span><span class="p">.</span><span class="n">total_reward</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>On every step, an agent takes some observations from the environment, does its</p>
+
+<p>calculations, and selects the action to issue. The result of this action is a <strong>reward</strong> and</p>
+
+<p><strong>new observation</strong>.</p>
+
+<h2 id="2-hardware-and-software-requirements">2. Hardware and software requirements</h2>
+
+<p><strong>Software</strong>:</p>
+
+<ul>
+  <li>Numpy</li>
+  <li>OpenCV Python bindings</li>
+  <li>Gym</li>
+  <li>PyTorch</li>
+  <li>Ptan</li>
+</ul>
+
+<p><strong>Hardware</strong>:</p>
+
+<ul>
+  <li>GPU</li>
+</ul>
+
+<h2 id="3-openai-gym-api">3. OpenAI Gym API</h2>
+
+<p>The main goal of Gym is to provide a rich collection of environments for RL experiments</p>
+
+<p>for RL experiments using a unified interface. So, it’s not surprising that the central class in the library is an</p>
+
+<p>an environment, which is called Env. From high level, every environment provides you with these</p>
+
+<p>pieces of information and functionality:</p>
+
+<ul>
+  <li>A set of actions that are allowed to be executed in an environment. Gym supports both  discrete and continuous actions, as well as their combination.</li>
+  <li>The shape and bondaries of the observations that an environment provides the agent with.</li>
+  <li>A method called step to execute an action, which returns the current observation, reward, and indication that the episode is over.</li>
+  <li>A method called reset to return the environment to its initial state and to obtain the first observation.</li>
+</ul>
+
+<h2 id="4-action-space">4. Action space</h2>
+
+<p><strong>Discrete actions</strong>, for example, directions in a grid like left, right, up, or down.</p>
+
+<p><strong>Continuous action</strong>, for example,  an accelerator pedal, it’s usually from 0 to 1; in the case of</p>
+
+<p>a steering wheel, it could be from -720 degrees to 720 degrees.</p>
+
+<h2 id="5-observation-space">5. Observation space</h2>
+
+<p>Could be any thing, such as an image (3 dimensional tensors) or a scalar and an Boolean value.</p>
+
+<h2 id="6-the-environment">6. The environment</h2>
+
+<p>The environment is represented in Gym by the Env class, which has the following members:</p>
+
+<ul>
+  <li>
+    <p>action_space: This is the field of the Space class, providing a specification for allowed actions in the  environment.</p>
+  </li>
+  <li>
+    <p>observation_space: This field has the same Space class, but specifies the observations provided by the environment.</p>
+  </li>
+  <li>
+    <p>reset() : This resets the environment to its initial state, returning the initial observation vector</p>
+  </li>
+  <li>
+    <p>step() : This method allows the agent to give the action and returns the information about the outcome of the action: the next observation, local reward, and end-of-episode flag.</p>
+
+    <p>​</p>
+  </li>
+</ul>
+
+<h2 id="7-creation-of-the-environment">7. Creation of the environment</h2>
+
+<p>To create the environment, the Gym package provides the make(env_name) function with the only argument of the environment’s name in the string form.</p>
+
+<h2 id="8-the-cartpole-session">8. The CartPole session</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">gym</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">gym</span><span class="p">.</span><span class="n">make</span><span class="p">(</span><span class="s">'CartPole-v0'</span><span class="p">)</span>
+<span class="n">obs</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span> <span class="k">print</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">action_space</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">observation_space</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">step</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">action_space</span><span class="p">.</span><span class="n">sample</span><span class="p">())</span>
+<span class="k">print</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">observation_space</span><span class="p">.</span><span class="n">sample</span><span class="p">())</span>
+</code></pre></div></div>
+
+<p>###8.1 The random CartPole agent</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">gym</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+  <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="p">.</span><span class="n">make</span><span class="p">(</span><span class="s">"CartPole-v0"</span><span class="p">)</span>
+  <span class="n">total_reward</span> <span class="o">=</span> <span class="mf">0.0</span>
+  <span class="n">total_steps</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="n">reset</span><span class="p">()</span>
+  <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="n">action_space</span><span class="p">.</span><span class="n">sample</span><span class="p">()</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">env</span><span class="p">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+    <span class="n">total_reward</span> <span class="o">+=</span> <span class="n">reward</span>
+    <span class="n">total_steps</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+      <span class="k">break</span>
+  <span class="k">print</span><span class="p">(</span><span class="s">"Episode done in {} steps, total reward {:4}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">total_steps</span><span class="p">,</span> <span class="n">total_reward</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h2 id="9-the-extra-gym-functionality---wrappers-and-monitors">9. The extra Gym functionality - wrappers and monitors</h2>
+
+<h3 id="91-wrappers">9.1 Wrappers</h3>
+
+<p>The Wrapper class inherits the Env class. Its constructor accepts the only argument: the instance of the Env</p>
+
+<p>class to be wrapped. About environment.</p>
+
+<h3 id="92-monitor">9.2 Monitor</h3>
+
+<p>Monitor class is implemented for recording agent’s performance.</p>
+:ET

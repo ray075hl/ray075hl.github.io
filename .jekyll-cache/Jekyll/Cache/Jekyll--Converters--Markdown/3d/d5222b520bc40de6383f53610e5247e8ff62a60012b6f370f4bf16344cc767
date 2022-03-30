@@ -1,0 +1,126 @@
+I"_<h3 id="值迭代方法存在的问题">值迭代方法存在的问题</h3>
+
+<p><strong>值迭代</strong>或是<strong>Q值迭代</strong>或是<strong>策略迭代</strong>需要遍历<strong><em>所有</em></strong>的状态(<strong>states</strong>),针对每一个状态做贝尔曼更新<strong>(bellman approximation)</strong>.</p>
+
+<ul>
+  <li>第一个明显的问题是: 环境状态的数目有时候是特别巨大的,假设状态是一张\(100*100\)的彩色图片,那么所有可能的状态数目为\(100*100*3*256=7680000\), 对如此庞大的数目建立一个<strong>Q-table</strong>显然十分浪费存储以及密集的计算.最重要的是针对某个特定问题(例如玩游戏的屏幕\(100*100\)),7680000中的绝大多数情况可能是永远都不会出现的,遍历是没有必要的.</li>
+  <li>第二个问题是:值迭代方法的动作空间必须是离散的,的确,\(Q(s,a), V(s)\) 估计假定我们的动作空间是互斥的离散集合. 这个问题比上一个问题更加具有挑战性.</li>
+</ul>
+
+<h4 id="对于第一个问题状态空间数目庞大">对于第一个问题(状态空间数目庞大)</h4>
+
+<p>对于没有出现过的状态,只针对出现过的状态进行value的计算,这就是<strong>Q-learning</strong>.</p>
+
+<p>As mentioned earlier, and for case with explicit state-to-value mappings, has the following steps:</p>
+
+<blockquote>
+  <ol>
+    <li>
+      <p>Start with an <strong>empty table</strong>, mapping states to values of actions.</p>
+    </li>
+    <li>
+      <p>By interacting with the environment, <strong>obtain the tuple \(s, a, r, s'\)  (state, action, reward, and the new state)</strong>. In this step, <strong>we need to decide which action to take</strong>, and there is no single proper way to make this decision. We discussed this problem as exploration versus exploitation and will talk a lot about this.</p>
+    </li>
+    <li>
+      <p>Update the \(Q(s, a)\) value using the Bellman approximation:</p>
+    </li>
+  </ol>
+
+\[Q(s,a) \leftarrow r + \gamma \max_{a' \in A}Q(s',a')\]
+
+  <p><strong>Or</strong> using “blending” technique, which is just averaging between old and new values of Q using learning rate \(\alpha\). Allows values of \(Q\) to converge smoothly.</p>
+
+\[Q(s,a) \leftarrow (1-\alpha)Q(s,a) + \alpha(r + \gamma \max_{a' \in A}Q(s',a'))\]
+
+  <ol>
+    <li>Repeat from step 2.</li>
+  </ol>
+</blockquote>
+
+<p>这就是所谓的<strong>表格Q-learning</strong>, 它不同于Q值迭代的地方在于,没有显式的遍历所有的状态,只针对出现过的状态进行值更新.它能够处理可观测状态较多的情形,但是能力有限,它还是无法处理图像这种状态量极其巨大的情形,还有诸如CartPole这种可观测状态近乎无穷的问题(因为环境的输出是浮点数).</p>
+
+<h3 id="dqn">DQN</h3>
+
+<p>我们可以用一个非线性的映射来代替Q-table,</p>
+
+<p>[Q(s, a) \rightarrow value]</p>
+
+<p>这个非线性映射就是Neural Network,</p>
+
+<p>[NN(s, a) \rightarrow value]</p>
+
+<p>一个简单的改进为:</p>
+
+<blockquote>
+  <ol>
+    <li>
+      <p>Initialize \(Q(s,a)\) with some initial approximation</p>
+    </li>
+    <li>
+      <p>By interacting with the environment, obtain the tuple\((s,a,r,s')\)</p>
+    </li>
+    <li>
+      <p>Calculate loss: \(L = (Q(s,a) - r)^2\)  if episode has ended or</p>
+
+      <p>\(L = Q(s,a)-(r+\gamma\max_{a' \in A}Q(s',a'))^2\) otherwise</p>
+    </li>
+    <li>
+      <p>Update \(Q(s,a)\) using the <strong>stochastic gradient descent(SGD)</strong> algorithm, by</p>
+
+      <p>minimizing the loss with respect to the model parameters</p>
+    </li>
+    <li>
+      <p>Repeat from step 2 until converged</p>
+    </li>
+  </ol>
+</blockquote>
+
+<p>上面的算法看起来很自然,不过存在很多问题,并不能有效的工作.</p>
+
+<p><strong>问题有以下几点:</strong></p>
+
+<p>这几个问题比较有意思, 后续再专门详细讨论.</p>
+
+<ol>
+  <li>
+    <p>Exploration versus exploitation</p>
+
+    <p>探索与利用的矛盾是强化学习中的关键问题</p>
+  </li>
+  <li>
+    <p>Stochastic gradient descent(SGD) optimization</p>
+
+    <p>主要是SGD的优化针对的是i.i.d类型的数据,而此处的数据分布在不断地变化</p>
+  </li>
+  <li>
+    <p>Correlation between steps</p>
+
+    <p>解决方法中的一个为 target network</p>
+  </li>
+  <li>
+    <p>The Markov property</p>
+
+    <p>解决方法中的一个为 采用连续的数据堆作为输入(如连续的几帧图像)</p>
+  </li>
+</ol>
+
+<p><strong><em>The final form of DQN training</em></strong>(with target network)</p>
+
+<p>from paper <a href="https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf">Playing Atari with Deep Reinforcement Learning</a>.(without target network)</p>
+
+<blockquote>
+  <ol>
+    <li>Initialize parameters for \(Q(s,a)\) and \(\hat{Q}(s,a)\) with random weights, \(\epsilon \leftarrow 1.0\), and empty replay buffer</li>
+    <li>With probability \(\epsilon\), select a random action a, otherwise \(a = \arg \max_{a} Q(s,a)\)</li>
+    <li>Execute action a in an emulator and observe reward \(r\) and the next state \(s'\)</li>
+    <li>Store transition \((s, a, r, s')\) in the replay buffer</li>
+    <li>Sample a random mini-batch of transitions from the replay buffer</li>
+    <li>For every transition in the buffer, calculate target \(y=r\) if the episode has ended at this step or \(y=r+\gamma \max_{a'\in A}\hat{Q}(s',a')\) otherwise</li>
+    <li>Calculate loss: \(L=(Q(s,a)-y)^2\)</li>
+    <li>Update \(Q(s,a)\) using the SGD algorithm by minimizing the loss in respect to model parameters</li>
+    <li>Every N steps copy weights from \(Q\) to \(\hat{Q}_{t}\)</li>
+    <li>Repeat from step 2 until converged</li>
+  </ol>
+</blockquote>
+
+:ET

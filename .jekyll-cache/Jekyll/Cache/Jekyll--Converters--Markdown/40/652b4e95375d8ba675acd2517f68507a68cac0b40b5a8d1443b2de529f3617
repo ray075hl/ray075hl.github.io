@@ -1,0 +1,30 @@
+I"�<h3 id="download-dlib-下载dlib的源代码">Download dlib 下载dlib的源代码</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/davisking/dlib.git
+</code></pre></div></div>
+
+<h3 id="compiling-dlib-python-api-编译dlib的python接口">Compiling dlib python API 编译dlib的python接口</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># I used this command install dlib with cuda support succeed.</span>
+python setup.py <span class="nb">install</span> <span class="nt">--yes</span> USE_AVX_INSTRUCTIONS <span class="nt">--clean</span>
+
+<span class="c"># But I failed with the command below which I think more reasonable. That's weird!</span>
+python setup.py <span class="nb">install</span> <span class="nt">--yes</span> USE_AVX_INSTRUCTIONS <span class="nt">--yes</span> DLIB_USE_CUDA <span class="nt">--set</span> <span class="nv">CMAKE_PREFIX_PATH</span><span class="o">=</span>/usr/local/cuda <span class="nt">--set</span> <span class="nv">CUDA_TOOLKIT_ROOT_DIR</span><span class="o">=</span>/usr/local/cuda/bin/  <span class="nt">--set</span> <span class="nv">CUDA_CUDART_LIBRARY</span><span class="o">=</span>/usr/local/cuda/lib64/ <span class="nt">--clean</span>
+</code></pre></div></div>
+
+<h3 id="some-problems-可能出现的问题">Some problems 可能出现的问题</h3>
+
+<ul>
+  <li>
+    <p><strong>opencv import error (libopencv_dnn.so.3.4 undefined symbol)</strong></p>
+
+    <p>check this link https://github.com/ContinuumIO/anaconda-issues/issues/9601)</p>
+  </li>
+  <li>
+    <p><strong>ImportError: numpy.core.multiarray failed to import</strong></p>
+
+    <p>pip install numpy</p>
+  </li>
+</ul>
+
+:ET

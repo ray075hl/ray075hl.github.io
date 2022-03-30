@@ -1,0 +1,33 @@
+I"U<p>为了让<strong>DQN</strong>的训练变得稳定,以及加速收敛,可以采用以下的一些改进技巧.</p>
+
+<ul>
+  <li>
+    <p><strong>N-steps DQN:</strong> How to improve convergence speed and stability with a</p>
+
+    <p>simple unrolling of the Bellman equation and why it’s not an ultimate solution</p>
+  </li>
+  <li>
+    <p><strong>Double DQN:</strong> How to deal with <strong>DQN</strong> overestimation of the values of actions</p>
+  </li>
+  <li>
+    <p><strong>Noisy networks:</strong> How to make exploration more efficient by adding noise to</p>
+
+    <p>the network weights</p>
+  </li>
+  <li>
+    <p><strong>Prioritized replay buffer:</strong>  Why Uniform sampling of our experience is not the</p>
+
+    <p>best way to train</p>
+  </li>
+  <li>
+    <p><strong>Dueling DQN:</strong> How to improve convergence speed by making our network’s</p>
+
+    <p>architecture closer represent the problem we’re solving</p>
+  </li>
+  <li>
+    <p><strong>Categorical DQN:</strong> How to go beyond the single expected value of action and</p>
+
+    <p>work with full distributions</p>
+  </li>
+</ul>
+:ET

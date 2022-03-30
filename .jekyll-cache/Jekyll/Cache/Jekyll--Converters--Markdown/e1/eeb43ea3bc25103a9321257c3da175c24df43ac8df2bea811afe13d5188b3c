@@ -1,0 +1,89 @@
+I"@<h2 id="pytorch-image-lab-to-rgb"><center>Pytorch Image LAB To RGB</center></h2>
+<p>在使用Pytorch时, 将LAB格式的图片转化为RGB图片,采用mask的方式能够充分<br />
+利用GPU的单指令多数据式的并行计算模式.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+
+<span class="k">def</span> <span class="nf">torch_lab2rgb</span><span class="p">(</span><span class="n">lab_image</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">):</span>
+    <span class="s">'''
+    :param lab_image: [0., 1.]  format: Bx3XHxW
+    :param batch_size:
+    :return: rgb_image [0., 1.]
+    '''</span>
+    
+    <span class="c1">#rgb_image = torch.zeros(lab_image.size()).to(config.device)
+</span>    <span class="n">rgb_image</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">lab_image</span><span class="p">.</span><span class="n">size</span><span class="p">()).</span><span class="n">cuda</span><span class="p">()</span>
+    
+    <span class="n">l_s</span> <span class="o">=</span> <span class="n">lab_image</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">a_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">lab_image</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span> <span class="o">-</span> <span class="mi">128</span>
+    <span class="n">b_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">lab_image</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span> <span class="o">-</span> <span class="mi">128</span>
+
+    <span class="n">var_Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">l_s</span> <span class="o">+</span> <span class="mf">16.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">116.</span>
+    <span class="n">var_X</span> <span class="o">=</span> <span class="n">a_s</span> <span class="o">/</span> <span class="mf">500.</span> <span class="o">+</span> <span class="n">var_Y</span>
+    <span class="n">var_Z</span> <span class="o">=</span> <span class="n">var_Y</span> <span class="o">-</span> <span class="n">b_s</span> <span class="o">/</span> <span class="mf">200.</span>
+
+    <span class="n">mask_Y</span> <span class="o">=</span> <span class="n">var_Y</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.008856</span>
+    <span class="n">mask_X</span> <span class="o">=</span> <span class="n">var_X</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.008856</span>
+    <span class="n">mask_Z</span> <span class="o">=</span> <span class="n">var_Z</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.008856</span>
+
+    <span class="n">Y_1</span> <span class="o">=</span> <span class="n">var_Y</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">mask_Y</span><span class="p">.</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">Y_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">var_Y</span> <span class="o">-</span> <span class="mf">16.</span> <span class="o">/</span> <span class="mf">116.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">7.787</span> <span class="o">*</span> <span class="p">(</span><span class="o">~</span><span class="n">mask_Y</span><span class="p">).</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">var_Y</span> <span class="o">=</span> <span class="n">Y_1</span> <span class="o">+</span> <span class="n">Y_2</span> 
+
+    <span class="n">X_1</span> <span class="o">=</span> <span class="n">var_X</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">mask_X</span> <span class="p">.</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">X_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">var_X</span> <span class="o">-</span> <span class="mf">16.</span> <span class="o">/</span> <span class="mf">116.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">7.787</span> <span class="o">*</span> <span class="p">(</span><span class="o">~</span><span class="n">mask_X</span><span class="p">).</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">var_X</span> <span class="o">=</span> <span class="n">X_1</span> <span class="o">+</span> <span class="n">X_2</span> 
+
+    <span class="n">Z_1</span> <span class="o">=</span> <span class="n">var_Z</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">mask_Z</span><span class="p">.</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">Z_2</span> <span class="o">=</span> <span class="p">(</span><span class="n">var_Z</span> <span class="o">-</span> <span class="mf">16.</span> <span class="o">/</span> <span class="mf">116.</span><span class="p">)</span> <span class="o">/</span> <span class="mf">7.787</span> <span class="o">*</span> <span class="p">(</span><span class="o">~</span><span class="n">mask_Z</span><span class="p">).</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">var_Z</span> <span class="o">=</span> <span class="n">Z_1</span> <span class="o">+</span> <span class="n">Z_2</span> 
+
+
+    <span class="n">X</span> <span class="o">=</span> <span class="mf">0.95047</span> <span class="o">*</span> <span class="n">var_X</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="mf">1.00000</span> <span class="o">*</span> <span class="n">var_Y</span>
+    <span class="n">Z</span> <span class="o">=</span> <span class="mf">1.08883</span> <span class="o">*</span> <span class="n">var_Z</span>
+
+    <span class="n">var_R</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span>  <span class="mf">3.2406</span> <span class="o">+</span> <span class="n">Y</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.5372</span> <span class="o">+</span> <span class="n">Z</span> <span class="o">*</span> <span class="o">-</span><span class="mf">0.4986</span>
+    <span class="n">var_G</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="o">-</span><span class="mf">0.9689</span> <span class="o">+</span> <span class="n">Y</span> <span class="o">*</span>  <span class="mf">1.8758</span> <span class="o">+</span> <span class="n">Z</span> <span class="o">*</span>  <span class="mf">0.0415</span>
+    <span class="n">var_B</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span>  <span class="mf">0.0557</span> <span class="o">+</span> <span class="n">Y</span> <span class="o">*</span> <span class="o">-</span><span class="mf">0.2040</span> <span class="o">+</span> <span class="n">Z</span> <span class="o">*</span>  <span class="mf">1.0570</span>
+
+    <span class="n">mask_R</span> <span class="o">=</span> <span class="n">var_R</span> <span class="o">&gt;</span> <span class="mf">0.0031308</span>
+    <span class="n">R_1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.055</span> <span class="o">*</span> <span class="n">var_R</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.4</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.055</span><span class="p">)</span> <span class="o">*</span> <span class="n">mask_R</span><span class="p">.</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">R_2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">12.92</span> <span class="o">*</span> <span class="n">var_R</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">~</span><span class="n">mask_R</span><span class="p">).</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">var_R</span> <span class="o">=</span> <span class="n">R_1</span> <span class="o">+</span> <span class="n">R_2</span>
+
+    <span class="n">mask_G</span> <span class="o">=</span> <span class="n">var_G</span><span class="o">&gt;</span> <span class="mf">0.0031308</span>
+    <span class="n">G_1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.055</span> <span class="o">*</span> <span class="n">var_G</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.4</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.055</span><span class="p">)</span> <span class="o">*</span> <span class="n">mask_G</span><span class="p">.</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">G_2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">12.92</span> <span class="o">*</span> <span class="n">var_G</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">~</span><span class="n">mask_G</span><span class="p">).</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">var_G</span> <span class="o">=</span> <span class="n">G_1</span> <span class="o">+</span> <span class="n">G_2</span>
+    
+    <span class="n">mask_B</span> <span class="o">=</span> <span class="n">var_B</span> <span class="o">&gt;</span> <span class="mf">0.0031308</span>
+    <span class="n">B_1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.055</span> <span class="o">*</span> <span class="n">var_B</span><span class="p">.</span><span class="nb">pow</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">2.4</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.055</span><span class="p">)</span> <span class="o">*</span> <span class="n">mask_B</span><span class="p">.</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">B_2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">12.92</span> <span class="o">*</span> <span class="n">temp_B</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">~</span><span class="n">mask_B</span><span class="p">).</span><span class="nb">float</span><span class="p">()</span>
+    <span class="n">var_B</span> <span class="o">=</span> <span class="n">B_1</span> <span class="o">+</span> <span class="n">B_2</span>
+
+    <span class="k">return</span> <span class="n">torch</span><span class="p">.</span><span class="n">stack</span><span class="p">((</span><span class="n">var_R</span><span class="p">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> 
+                        <span class="n">var_G</span><span class="p">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> 
+                        <span class="n">var_B</span><span class="p">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">).</span><span class="n">clamp</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)</span>
+
+
+<span class="c1"># Unit test
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">image_bgr</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">imread</span><span class="p">(</span><span class="s">'test.png'</span><span class="p">)</span>
+    <span class="n">image_lab</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image_bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_BGR2Lab</span><span class="p">)</span>
+    <span class="n">image_lab</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">image_lab</span> <span class="o">/</span><span class="mf">255.0</span>
+    <span class="n">image_lab</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">image_lab</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>  <span class="c1"># channel first
+</span>
+    <span class="n">tensor_labimg</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">image_lab</span><span class="p">).</span>\
+        <span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="nb">float</span><span class="p">()</span>  <span class="c1"># add batch dim
+</span>    <span class="n">tensor_rgb</span> <span class="o">=</span> <span class="n">torch_lab2rgb</span><span class="p">(</span><span class="n">tensor_labimg</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">numpy_rgb</span> <span class="o">=</span> <span class="n">tensor_rgb</span><span class="p">.</span><span class="n">cpu</span><span class="p">().</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">rgb_img</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">numpy_rgb</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">*</span> <span class="mf">255.0</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="s">'uint8'</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="p">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">'result.png'</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">flip</span><span class="p">(</span><span class="n">rgb_img</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h3 id="reference">Reference</h3>
+<p><a href="https://docs.opencv.org/3.3.0/de/d25/imgproc_color_conversions.html#color_convert_rgb_lab">https://docs.opencv.org/3.3.0/de/d25/imgproc_color_conversions.html#color_convert_rgb_lab</a></p>
+:ET

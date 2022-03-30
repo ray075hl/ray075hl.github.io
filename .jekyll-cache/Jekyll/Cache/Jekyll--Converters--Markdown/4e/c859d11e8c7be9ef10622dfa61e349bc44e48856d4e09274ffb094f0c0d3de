@@ -1,0 +1,168 @@
+I"�<h3 id="基本数据类-node-relationship">基本数据类 Node， Relationship</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">py2neo</span><span class="p">.</span><span class="n">data</span> <span class="kn">import</span> <span class="nn">Node</span><span class="p">,</span> <span class="n">Relationship</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s">"Person"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"Alice"</span><span class="p">)</span> <span class="c1"># Person是label, name是属性
+</span><span class="n">b</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s">"Person"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"Bob"</span>
+<span class="n">ab</span> <span class="o">=</span> <span class="n">Relationship</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="s">"KNOWS"</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="node类节点类">Node类，节点类</h4>
+
+<p>基本操作</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作符号</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>==</td>
+      <td>node的ID相等，就说两个node相等，不需要属性值都相等</td>
+    </tr>
+    <tr>
+      <td>！=</td>
+      <td>不相等</td>
+    </tr>
+    <tr>
+      <td>hash(node)</td>
+      <td>返回node的ID</td>
+    </tr>
+    <tr>
+      <td>node[key]</td>
+      <td>返回key这个属性的值</td>
+    </tr>
+    <tr>
+      <td>node[key]=value</td>
+      <td>赋值</td>
+    </tr>
+    <tr>
+      <td>del node[key]</td>
+      <td>删除节点属性</td>
+    </tr>
+    <tr>
+      <td>len(node)</td>
+      <td>返回node的属性个数</td>
+    </tr>
+    <tr>
+      <td>dict(node)</td>
+      <td>把node转成dict类型</td>
+    </tr>
+    <tr>
+      <td>walk(node)</td>
+      <td>Yield node as the only item in a <strong><em>walk()</em></strong></td>
+    </tr>
+    <tr>
+      <td>node.labels</td>
+      <td>Return the full set of labels associated with <em>node</em></td>
+    </tr>
+    <tr>
+      <td>node.has_label(label)</td>
+      <td>略</td>
+    </tr>
+    <tr>
+      <td>node.add_label(label)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>node.remove_label(label)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>node.clear_labels()</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>node.update_labels(labels)</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="relationship类">Relationship类</h4>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">py2neo</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">Relationship</span><span class="p">(</span><span class="n">start_node</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">end_node</span><span class="p">,</span> <span class="o">**</span><span class="n">properties</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">py2neo</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">Relationship</span><span class="p">(</span><span class="n">start_node</span><span class="p">,</span> <span class="n">end_node</span><span class="p">,</span> <span class="o">**</span><span class="n">properties</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">py2neo</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">Relationship</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="o">**</span><span class="n">properties</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">py2neo</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">Relationship</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="o">**</span><span class="n">properties</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s">"Person"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"Alice"</span><span class="p">)</span> <span class="c1"># Person是label, name是属性
+</span><span class="n">c</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(</span><span class="s">"Person"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">"Carol"</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">WorksWith</span><span class="p">(</span><span class="n">Relationship</span><span class="p">):</span> <span class="k">pass</span>
+<span class="n">ac</span> <span class="o">=</span> <span class="n">WorksWith</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">ac</span><span class="p">)</span>  <span class="c1"># 'WORKS_WITH'
+</span></code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>操作</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>==</td>
+      <td>判断关系是否相等</td>
+    </tr>
+    <tr>
+      <td>！=</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>hash(relationship)</td>
+      <td>Return a hash of <em>relationship</em> based on its start node, end node and type.</td>
+    </tr>
+    <tr>
+      <td>relationship[key]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>relationship[key] = value</td>
+      <td>Remove the property with key <em>key</em> from <em>relationship</em>, raising a <code class="language-plaintext highlighter-rouge">KeyError</code> if such a property does not exist.</td>
+    </tr>
+    <tr>
+      <td>del relationship[key]</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>len(relationship)</td>
+      <td>Return the number of properties in <em>relationship</em>.</td>
+    </tr>
+    <tr>
+      <td>dict(relationship)</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>walk(relationship)</td>
+      <td>Perform a <a href="https://py2neo.org/v4/data.html#py2neo.data.walk"><code class="language-plaintext highlighter-rouge">walk()</code></a> of this relationship, yielding its start node, the relationship itself and its end node in turn.</td>
+    </tr>
+    <tr>
+      <td>type(relationship)</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="subgraph类">Subgraph类</h4>
+
+<p>Subgraph是一个静态集合（关于nodes和relationships的），所以subgraph可以支持一系列集合的</p>
+
+<p>操作，</p>
+
+<h4 id="path类-和-walkable类">Path类 和 Walkable类</h4>
+
+<p>A <em>Walkable</em> is a <code class="language-plaintext highlighter-rouge">Subgraph</code> with <strong><em>added traversal information</em></strong>.</p>
+
+<p>A <em>Path</em> is a type of <code class="language-plaintext highlighter-rouge">Walkable</code> returned by some Cypher queries.</p>
+
+<h4 id="record类">Record类</h4>
+
+<p>A <code class="language-plaintext highlighter-rouge">Record</code> object holds an ordered, keyed collection of values.</p>
+
+<h4 id="table类">Table类</h4>
+
+<p>A <code class="language-plaintext highlighter-rouge">Table</code> holds a list of <code class="language-plaintext highlighter-rouge">Record</code> objects, typically received as the result of a Cypher query. I</p>
+:ET

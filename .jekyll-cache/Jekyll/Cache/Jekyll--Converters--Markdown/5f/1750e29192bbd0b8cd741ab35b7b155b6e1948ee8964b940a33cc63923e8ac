@@ -1,0 +1,38 @@
+I")<p>视觉问答(Visual Question Answer)</p>
+
+<h4 id="1-非深度学习的方法">1 非深度学习的方法</h4>
+
+<ul>
+  <li>
+    <p>Answer Type Prediction (ATP)</p>
+
+    <p>遵循的是贝叶斯法则</p>
+
+\[P(A=a,T=t|x,q)=\frac {P(x|A=a,T=t,q)P(A=a|T=t,q)P(T=t|q)} {P(x|q)}\]
+
+    <p>Answer: <strong>a</strong>, Answer type: <strong>t</strong>, Image: <strong>x</strong>, Question: <strong>q</strong>.</p>
+  </li>
+  <li>
+    <p>Multi-World QA</p>
+
+\[P(A=a|Q,W)=\Sigma_{T}P(A=a|T,W)P(T|Q)\]
+
+    <p>Here <strong>T</strong> is a latent variable. Image: <strong>W</strong></p>
+  </li>
+</ul>
+
+<h4 id="2-深度学习相关的方法">2 深度学习相关的方法</h4>
+
+<p>主要分为可以分为三个部分</p>
+
+<ul>
+  <li><strong>Joint embedding approaches</strong></li>
+  <li><strong>Attention mechanisms</strong></li>
+  <li><strong>Compositional Models</strong></li>
+  <li><strong>Models using external knowledge bases</strong></li>
+</ul>
+
+<p>在了解这些方法之前, 需要先知道nlp(nature language processing)的基础知识.</p>
+
+<p>未完待续…</p>
+:ET

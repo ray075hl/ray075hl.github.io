@@ -1,0 +1,42 @@
+I"�<h2 id="value-iteration-vs-policy-iteration">value iteration VS policy iteration</h2>
+
+<p><strong>值迭代</strong> 和 <strong>策略迭代</strong> 都是围绕贝尔曼方程, 通过贝尔曼更新式来找到针对问题的最优策略，只是在实作上有所不同。</p>
+
+<p>贝尔曼方程：</p>
+
+<p>[V^<em>(s) = \max\sum_{s’}T(s,a,s’)[R(s,a,s’)+\gamma V^</em>(s’)]]</p>
+
+<p>他们的不同之处在于：</p>
+
+<ul>
+  <li>
+    <p>值迭代简单，但是计算量很大；</p>
+  </li>
+  <li>
+    <p>策略迭代复杂一些，但是更高效，因为大多数情形是，策略会在值函数收敛之前收敛；</p>
+  </li>
+  <li>
+    <p>值迭代的步骤是：<strong>找到最优的值函数</strong> + <strong>仅一次</strong>策略提取（例如贪婪策咯）；找到最优的值函数就是</p>
+
+    <p>不停地迭代值函数直至收敛（例如变化小于\(\delta\)）；</p>
+
+    <p><img src="../assets/img/value_iter.jpg" alt="value iteration" /></p>
+  </li>
+  <li>
+    <p>策略迭代的步骤是： <strong>策略评估</strong> 和 <strong>策略改善</strong> 交替进行， 直至策略不变（收敛） ，</p>
+
+    <p>策略评估就是在当前策略\(\pi_{i}\)下的值迭代，更新式如下：</p>
+
+\[V^{\pi_{i}}_{k+1}(s) \leftarrow \sum_{s'}T(s,\pi_{i}(s), s')[R(s,\pi_{i}(s),s')+\gamma V_{k}^{\pi_{i}}(s')]\]
+
+    <p>策略改善就是，根据当前的值函数确定一个新的策略，（one-step look-ahead）跟新式如下：</p>
+
+\[\pi_{i+1}(s)=\arg\max_{a} \sum_{s'}T(s,a,s')[R(s,a,s')+\gamma V^{\pi_{i}}(s')]\]
+
+    <p><img src="../assets/img/policy_iter.jpg" alt="policy iteration" /></p>
+
+    <p>​</p>
+  </li>
+</ul>
+
+:ET

@@ -1,0 +1,13 @@
+I"�<p>TDD是Test-Driven Development 的简写。目的是Development(开发)。而非POUT —plain ol’s unit testing 开发完成后再编写测试。</p>
+
+<p>TDD的开发周期听上去十分简单， 只有三步：</p>
+
+<ol>
+  <li>写一个测试，让该测试不通过（红）</li>
+  <li>完善功能或错误，让测试通过（绿）</li>
+  <li>优化设计（重构）</li>
+</ol>
+
+<p>难点在于如何根据需求写出有价值的测试，即第一步。</p>
+
+:ET
