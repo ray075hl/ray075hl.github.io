@@ -7,15 +7,17 @@ permalink: ':title/'
 baseurl: "/ray075hl.github.io" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
+site-twitter:  HL075 # add your Twitter handle
+
 # Author Settings
 author: ray075hl # add your name
 author-img: hl.jpg # add your photo
 about-author: I am an engineer focusing on machine learning and interested in many things. # add description
-twitter:  HL075 # add your Twitter handle
-facebook:  # add your Facebook handle
-github: ray075hl # add your Github handle
-linkedin:  # add your Linkedin handle
-email: 729872400@qq.com # add your Email address
+
+social-facebook:  # add your Facebook handle
+social-github: ray075hl # add your Github handle
+social-linkedin:  # add your Linkedin handle
+social-email: 729872400@qq.com # add your Email address
 
 # Disqus
 discus-identifier: mr-brown # add your discus identifier
